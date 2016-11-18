@@ -11,7 +11,7 @@ public class Main {
         new Chapter(3, 2, new Chapter3_2(), "Play String"),
         new Chapter(3, 3, new Chapter3_3(), "Enum"),
         new Chapter(3, 4, new Chapter3_4(), "Pin Encryption"),
-        new Chapter(4, 1, new Chapter4_1()),
+        new Chapter(4, 1, new Chapter4_1(), "Computing A Raise"),
     };
 
     public static void main(String[] args) {

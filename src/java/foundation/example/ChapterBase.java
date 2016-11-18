@@ -3,10 +3,9 @@ package java.foundation.example;
 /**
  * Created by hhonda on 2016-11-17.
  */
-public class ChapterBase {
-
-    ChapterBase() {}
+public abstract class ChapterBase {
+    /**
+     * Override method for call each Chapter classes from Main.java
+     */
     public void main() {}
-
-    public interface OnCallLinstener { void onCall();}
 }
