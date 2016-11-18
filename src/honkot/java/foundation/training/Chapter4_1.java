@@ -32,7 +32,7 @@ public class Chapter4_1 extends ChapterBase {
         // Compute the raise using if ...
         for (Evaluate evaluate: EVALUATES) {
             if (evaluate.rating.equalsIgnoreCase(rating)) {
-                raise = currentSalary * evaluate.rate;
+                raise = currentSalary * (evaluate.rate / 100);
             }
         }
         newSalary = currentSalary + raise;
@@ -50,6 +50,6 @@ public class Chapter4_1 extends ChapterBase {
 
     class Evaluate {
         String rating; double rate;
-        Evaluate(String rating, double rate) {}
+        Evaluate(String rating, double rate) { this.rating = rating; this.rate = rate;}
     }
 }
