@@ -8,10 +8,11 @@ public class Main {
     private static final long LOOP_STOP_ALTERNATE_TIME = 1000;
 
     private static final Chapter[] CHAPTER = {
-        new Chapter(3, 2, new Chapter3_2(), "Play String"),
-        new Chapter(3, 3, new Chapter3_3(), "Enum"),
-        new Chapter(3, 4, new Chapter3_4(), "Pin Encryption"),
-        new Chapter(4, 1, new Chapter4_1(), "Computing A Raise"),
+            new Chapter(3, 2, new Chapter3_2(), "Play String"),
+            new Chapter(3, 3, new Chapter3_3(), "Enum"),
+            new Chapter(3, 4, new Chapter3_4(), "Pin Encryption"),
+            new Chapter(3, 5, new Chapter3_5(), "Input and do some tasks on program"),
+            new Chapter(4, 1, new Chapter4_1(), "Computing A Raise"),
     };
 
     public static void main(String[] args) {
