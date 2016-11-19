@@ -13,6 +13,7 @@ public class Main {
             new Chapter(3, 4, new Chapter3_4(), "Pin Encryption"),
             new Chapter(3, 5, new Chapter3_5(), "Input and do some tasks on program"),
             new Chapter(4, 1, new Chapter4_1(), "Computing A Raise"),
+            new Chapter(4, 2, new Chapter4_2(), "Counting and Summing"),
     };
 
     public static void main(String[] args) {
