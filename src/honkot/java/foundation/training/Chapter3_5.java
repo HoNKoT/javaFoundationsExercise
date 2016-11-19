@@ -150,8 +150,8 @@ public class Chapter3_5 extends ChapterBase {
     private void task3() {
         int stars = getMaximumStars();
 
-        while (stars > 0) {
-            printStars(stars--);
+        for (int i = stars; i >= 0; i--) {
+            printStars(i);
         }
     }
 
