@@ -9,9 +9,6 @@ public class Chapter4_3 extends ChapterBase {
 
     @Override
     public void main() {
-        String sentence;
-        String word;
-        String tempWord = "";
 
         // scan the input from user
         System.out.println("Enter a sentence: ");
@@ -21,7 +18,7 @@ public class Chapter4_3 extends ChapterBase {
         String inputString = scan.next();
 
         StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < inputString.length(); i++) {
+        for (int i = inputString.length() - 1; i >= 0; i--) {
             buf.append(inputString.charAt(i));
         }
         System.out.println(buf.toString());
