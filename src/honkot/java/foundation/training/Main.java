@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static final long LOOP_STOP_ALTERNATE_TIME = 1000;
+    private static final long LOOP_STOP_ALTERNATE_TIME = 200;
 
     private static final Chapter[] CHAPTER = {
             new Chapter(3, 2, new Chapter3_2(), "Play String"),
@@ -15,6 +15,7 @@ public class Main {
             new Chapter(4, 1, new Chapter4_1(), "Computing A Raise"),
             new Chapter(4, 2, new Chapter4_2(), "Counting and Summing"),
             new Chapter(4, 3, new Chapter4_3(), "String Reverser"),
+            new Chapter(4, 4, new Chapter4_4(), "Rock, Paper, Scissors"),
     };
 
     public static void main(String[] args) {
