@@ -8,15 +8,15 @@ public class Main {
     private static final long LOOP_STOP_ALTERNATE_TIME = 200;
 
     private static final Chapter[] CHAPTER = {
-            new Chapter(3, 2, new Chapter3_2(), "Play String"),
-            new Chapter(3, 3, new Chapter3_3(), "Enum"),
-            new Chapter(3, 4, new Chapter3_4(), "Pin Encryption"),
-            new Chapter(3, 5, new Chapter3_5(), "Input and do some tasks on program"),
-            new Chapter(4, 1, new Chapter4_1(), "Computing A Raise"),
-            new Chapter(4, 2, new Chapter4_2(), "Counting and Summing"),
-            new Chapter(4, 3, new Chapter4_3(), "String Reverser"),
-            new Chapter(4, 4, new Chapter4_4(), "Rock, Paper, Scissors"),
-            new Chapter(5, 1, new Chapter5_1(), "Use basic class"),
+            new Chapter(new Chapter3_2(), "Play String"),
+            new Chapter(new Chapter3_3(), "Enum"),
+            new Chapter(new Chapter3_4(), "Pin Encryption"),
+            new Chapter(new Chapter3_5(), "Input and do some tasks on program"),
+            new Chapter(new Chapter4_1(), "Computing A Raise"),
+            new Chapter(new Chapter4_2(), "Counting and Summing"),
+            new Chapter(new Chapter4_3(), "String Reverser"),
+            new Chapter(new Chapter4_4(), "Rock, Paper, Scissors"),
+            new Chapter(new Chapter5_1(), "Use basic class"),
     };
 
     public static void main(String[] args) {
@@ -58,7 +58,7 @@ public class Main {
             }
 
             // input major
-            System.out.println("Type Chapter Major/Minor Number (x-x): ");
+            System.out.print("Type Chapter Major/Minor Number (x-x): ");
             Scanner scan = new Scanner(System.in);
 
             // check format
@@ -139,13 +139,18 @@ public class Main {
         int major, minor;
         String description;
         Object chapterClass;
-        public Chapter(int major, int minor, Object chapter) {
-            this(major, minor, chapter, "");
+        public Chapter(Object chapter) {
+            this(chapter, "");
         }
 
-        public Chapter(int major, int minor, Object chapter, String desc) {
-            this.major = major;
-            this.minor = minor;
+        public Chapter(Object chapter, String desc) {
+            // Extract major and minor number
+            String[] numbers =
+                    chapter.getClass().getSimpleName()    // get class name
+                    .replace("Chapter", "").split("_");   // remove 'Chapter' and split numbers
+
+            this.major = Integer.parseInt(numbers[0]);
+            this.minor = Integer.parseInt(numbers[1]);
             this.chapterClass = chapter;
             this.description = desc;
         }
