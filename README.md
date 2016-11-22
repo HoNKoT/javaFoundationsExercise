@@ -12,4 +12,9 @@ under construction!
 | /src/honkot/.../Chapter3_2.java      |          | How edits String on coding. |
 | /src/honkot/.../Chapter3_3.java      |          | How uses enum. |
 | /src/honkot/.../Chapter3_4.java      |          | How uses Random. How perces the Number to Hex String. |
-| /src/honkot/.../Chapter4_1.java      |          |  |
+| /src/honkot/.../Chapter3_5.java      |          | Execute and repeat some commands you created. |
+| /src/honkot/.../Chapter4_1.java      |          | Compare Strings and how calcurates two numbers. |
+| /src/honkot/.../Chapter4_2.java<br> /res/input.txt      |          | Read resource file and print it. |
+| /src/honkot/.../Chapter4_3.java      |          | How reverses String. |
+| /src/honkot/.../Chapter4_4.java      |          | Play Rock, Paper, Scissors Game! |
+| /src/honkot/.../Chapter5_1.java <br> /src/honkot/.../sub/Human.java <br> /src/honkot/.../sub/SuperHuman.java     |          | How makes classes and extends them. |
