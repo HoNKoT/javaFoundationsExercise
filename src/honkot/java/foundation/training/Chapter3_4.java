@@ -7,7 +7,7 @@ import java.util.Scanner;
 /**
  * Created by hhonda on 2016-11-17.
  */
-public class Chapter3_4 extends ChapterBase {
+public class Chapter3_4 implements ChapterBase {
     private final int MAXIMUM = 0xffff;
 
     @Override

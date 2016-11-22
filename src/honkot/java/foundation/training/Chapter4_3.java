@@ -5,7 +5,7 @@ import java.util.Scanner;
 /**
  * Created by hhonda on 2016-11-18.
  */
-public class Chapter4_3 extends ChapterBase {
+public class Chapter4_3 implements ChapterBase {
 
     @Override
     public void main() {

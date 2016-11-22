@@ -6,7 +6,7 @@ import java.util.Scanner;
 /**
  * Created by hhonda on 2016-11-17.
  */
-public class Chapter4_1 extends ChapterBase {
+public class Chapter4_1 implements ChapterBase {
 
     private Evaluate[] EVALUATES = {
         new Evaluate("Excellent", 6.0),

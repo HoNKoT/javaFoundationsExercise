@@ -3,7 +3,7 @@ package honkot.java.foundation.training;
 /**
  * Created by hhonda on 2016-11-17.
  */
-public class Chapter3_2 extends ChapterBase {
+public class Chapter3_2 implements ChapterBase {
 
     @Override
     public void main() {

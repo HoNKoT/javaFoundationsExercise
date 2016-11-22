@@ -6,7 +6,7 @@ import java.util.Scanner;
 /**
  * Created by hhonda on 2016-11-18.
  */
-public class Chapter3_5 extends ChapterBase {
+public class Chapter3_5 implements ChapterBase {
 
     private final int MAX = 3;
     private final int MAX_STAR = 10;

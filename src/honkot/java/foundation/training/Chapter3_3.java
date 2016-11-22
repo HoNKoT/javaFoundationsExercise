@@ -5,7 +5,7 @@ import java.util.Scanner;
 /**
  * Created by hhonda on 2016-11-17.
  */
-public class Chapter3_3 extends ChapterBase{
+public class Chapter3_3 implements ChapterBase{
     private enum Season {
         SPRING, SUMMER, FALL, WINTER, AUTUMN
     }
