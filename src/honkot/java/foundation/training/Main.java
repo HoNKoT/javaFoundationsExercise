@@ -17,6 +17,7 @@ public class Main {
             new Chapter(new Chapter4_3(), "String Reverser"),
             new Chapter(new Chapter4_4(), "Rock, Paper, Scissors"),
             new Chapter(new Chapter5_1(), "Use basic class"),
+            new Chapter(new Chapter5_2(), "Generate some students and print them."),
     };
 
     public static void main(String[] args) {
