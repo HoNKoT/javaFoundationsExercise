@@ -18,6 +18,7 @@ public class Main {
             new Chapter(new Chapter4_4(), "Rock, Paper, Scissors"),
             new Chapter(new Chapter5_1(), "Use basic class"),
             new Chapter(new Chapter5_2(), "Generate some students and print them."),
+            new Chapter(new Chapter5_3(), "Credit card."),
     };
 
     public static void main(String[] args) {
