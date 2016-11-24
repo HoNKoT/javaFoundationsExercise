@@ -19,10 +19,10 @@ public class CreditCard {
     private double balance;
 
     private enum Grade {
-        Basic(10.0d, 1000.00d),
-        High(7.0d, 3000.00d),
-        Premium(4.0d, 7000.00d),
-        VIP(1.0d, 15000.00d);
+        Silver(10.0d, 1000.00d),
+        Gold(7.0d, 3000.00d),
+        Platinum(4.0d, 7000.00d),
+        Black(1.0d, 15000.00d);
 
         private final double defaultAdditionalRate;
         private final double defaultLimit;
@@ -37,13 +37,13 @@ public class CreditCard {
 
         public static Grade getGrade(int creditScore) {
             if (creditScore < 300) {
-                return Basic;
+                return Silver;
             } else if (creditScore < 500) {
-                return High;
+                return Gold;
             } else if (creditScore < 700) {
-                return Premium;
+                return Platinum;
             } else {
-                return VIP;
+                return Black;
             }
         }
 
@@ -56,7 +56,7 @@ public class CreditCard {
         }
     }
 
-    CreditCard(String accountHolder, int creditScore) {
+    public CreditCard(String accountHolder, int creditScore) {
         this.accountHolder = accountHolder;
         this.creditScore = creditScore;
         this.grade = Grade.getGrade(creditScore);
@@ -69,16 +69,8 @@ public class CreditCard {
         return accountHolder;
     }
 
-    public int getCreditScore() {
-        return creditScore;
-    }
-
-    public void setCreditScore(int creditScore) {
-        this.creditScore = creditScore;
-    }
-
-    public String getGrade() {
-        return grade.name();
+    public int getAccountNumber() {
+        return accountNumber;
     }
 
     public double getBalance() {
@@ -94,7 +86,7 @@ public class CreditCard {
     public boolean makePurchase(double amount) {
         double tempBalance = balance + amount;
 
-        if (grade.overLimit(tempBalance)) {
+        if (!grade.overLimit(tempBalance)) {
             addBalance(amount);
             return true;
         }
@@ -112,17 +104,19 @@ public class CreditCard {
      * @return false: error amount
      */
     public boolean makePayment(double amount) {
-        if (amount < 0.0d) {
+        amount = round(amount, 2);
+        if (amount < 0.00d) {
             return false;
         }
 
         double lastBalance = this.balance;
         boolean overPayment = amount > this.balance;
         this.balance = overPayment ? 0.00d : this.balance - amount;
+        this.balance = round(this.balance, 2);
 
         if (overPayment) {
             System.out.println("I appropriate you for your over payment.");
-        } else if (amount > lastBalance / 0.1) {
+        } else if (amount > lastBalance * 0.1) {
             raiseRate(1.0d);
         }
 
@@ -133,12 +127,21 @@ public class CreditCard {
         return true;
     }
 
+    private static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
+    }
+
     /**
      * Raises the account holder's rate by a given percentage.
      * @param amount
      * @return
      */
-    private boolean raiseRate(double amount) {
+    public boolean raiseRate(double amount) {
         if (amount < 0.0d) {
             return false;
         }
@@ -153,11 +156,11 @@ public class CreditCard {
      * @return
      */
     public boolean raiseLimit(double amount) {
-        if (amount < grade.defaultLimit) {
+        if (amount < 0.00d) {
             return false;
         }
 
-        this.limit = amount;
+        this.limit += amount;
         return true;
     }
 
@@ -171,17 +174,17 @@ public class CreditCard {
      * @return
      */
     public void calculateBalance() {
-        double multipleRate = baseRate + this.rate + grade.defaultAdditionalRate;
-        balance = balance + (balance * (balance * multipleRate));
+        double multipleRate = ((baseRate + this.rate + grade.defaultAdditionalRate) / 100) + 1;
+        balance = round(balance * multipleRate, 2);
     }
 
     @Override
     public String toString() {
         return "CreditCard{" +
                 "accountHolder='" + accountHolder + '\'' +
-                ", accountNumber=" + "****" + (accountNumber % 1000) +
+                ", accountNumber=" + "****" + String.format("%03d", accountNumber % 1000) +
                 ", creditScore=" + creditScore +
-                ", grade=" + grade +
+                ", grade=" + grade.name() +
                 ", rate=" + String.format("%1$.1f", rate) +
                 ", limit=" + limit +
                 ", balance=" + String.format("%1$.2f", balance) +
