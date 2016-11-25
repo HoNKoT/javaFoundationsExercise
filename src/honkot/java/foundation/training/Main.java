@@ -19,6 +19,7 @@ public class Main {
             new Chapter(new Chapter5_1(), "Use basic class"),
             new Chapter(new Chapter5_2(), "Generate some students and print them."),
             new Chapter(new Chapter5_3(), "Credit card."),
+            new Chapter(new Chapter5_4(), "[Midterm] register student info"),
     };
 
     public static void main(String[] args) {
