@@ -58,8 +58,7 @@ public class CreditCard {
 
     public CreditCard(String accountHolder, int creditScore) {
         this.accountHolder = accountHolder;
-        this.creditScore = creditScore;
-        this.grade = Grade.getGrade(creditScore);
+        addCreditScore(creditScore);
         this.accountNumber = ++lastAccountNumber;
         rate = 0.0d;
         limit = 0.0d; // means using default limit
@@ -75,6 +74,11 @@ public class CreditCard {
 
     public double getBalance() {
         return balance;
+    }
+
+    private void addCreditScore(int amount) {
+        this.creditScore += amount;
+        this.grade = Grade.getGrade(this.creditScore);
     }
 
     /**
@@ -121,7 +125,7 @@ public class CreditCard {
         }
 
         if (this.balance == 0.00d) {
-            this.creditScore += 10;
+            addCreditScore(10);
         }
 
         return true;
@@ -164,6 +168,14 @@ public class CreditCard {
         return true;
     }
 
+    /**
+     * For debug
+     */
+    public void changeScore(int creditScore) {
+        this.creditScore = 0;
+        addCreditScore(creditScore);
+    }
+
     private void addBalance(double balance) {
         this.balance += balance;
     }
@@ -175,6 +187,7 @@ public class CreditCard {
      */
     public void calculateBalance() {
         double multipleRate = ((baseRate + this.rate + grade.defaultAdditionalRate) / 100) + 1;
+        System.out.println("### multipleRate - " + multipleRate);
         balance = round(balance * multipleRate, 2);
     }
 

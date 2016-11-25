@@ -13,6 +13,7 @@ import java.util.Scanner;
 public class Chapter5_3 implements ChapterBase {
 
     private static ArrayList<CreditCard> mHolders = new ArrayList<CreditCard>();
+    private static CreditCard mLoginHolder = null;
 
     @Override
     public void main() {
@@ -30,15 +31,26 @@ public class Chapter5_3 implements ChapterBase {
 
         // Command mode
         do {
+            System.out.println(System.getProperty("line.separator"));
+            if (isLogin()) {
+                System.out.println("Hello " + mLoginHolder.getAccountHolder() + "! How can I help you?");
+            }
             Command.showMenu();
             System.out.print("SELECT A COMMAND > ");
 
-            int command;
+            String command;
             Scanner scan = new Scanner(System.in);
             try {
-                command = scan.nextInt();
-                Command cmd = Command.getCommand(command);
+                command = scan.next();
+                Command cmd;
+                try {
+                    int numCommand = Integer.parseInt(command);
+                    cmd = Command.getCommand(numCommand);
+                } catch (NumberFormatException e) {
+                    cmd = Command.getCommand(command);
+                }
                 if (cmd != null) {
+                    System.out.println(System.getProperty("line.separator"));
                     cmd.execute();
                     continue;
                 }
@@ -47,8 +59,7 @@ public class Chapter5_3 implements ChapterBase {
                 // nothing to do
             }
 
-            System.out.println("Please type A NUMBER");
-            System.out.println("");
+            System.out.println("FAILED...");
         } while(true);
     }
 
@@ -72,32 +83,80 @@ public class Chapter5_3 implements ChapterBase {
         return null;
     }
 
+    private static boolean isLogin() {
+        return mLoginHolder != null;
+    }
+
+    private static boolean login(int accountNumber) {
+        for (CreditCard holder: mHolders) {
+            if (accountNumber == holder.getAccountNumber()) {
+                // logined successful
+                mLoginHolder = holder;
+                return true;
+            }
+        }
+        mLoginHolder = null;
+        return false;
+    }
+
+    private static void logout() {
+        if (isLogin()) {
+            mLoginHolder = null;
+        }
+    }
+
     private enum Command {
-        Create(1, "Create your credit account"),
-        ShowBalance(2, "Show balance"),
-        Purchase(3, "Purchase"),
-        RaiseLimit(4, "Raise Limit"),
-        ThrouMonth(8, "Move to next month (for debug)"),
-        Dump(9, "dump (for debug)");
+
+        Create(0, "signup", "Sign up your credit account", Type.BeforeLogin),
+        Login(1, "login", "Log-in", Type.BeforeLogin),
+
+        Logout(0, "logout", "Log-out", Type.AfterLogin),
+        ShowBalance(1, "show", "Show balance", Type.AfterLogin),
+        Purchase(2, "purchase", "Record purchase", Type.AfterLogin),
+        RaiseLimit(3, "limit", "Raise purchase Limit", Type.AfterLogin),
+        ChangeScore(7, "score", "[for debug] change credit score", Type.AfterLogin),
+        ThrouMonth(8, "next", "[for debug] Move to next month", Type.Debug),
+        Dump(9, "dump", "[for debug] dump", Type.Debug);
 
         private int command;
+        private String stringCommand;
         private String message;
+        private Type type;
+        private enum Type {
+            BeforeLogin(0), AfterLogin(1), Debug(2);
+            private int i = 0;
+            Type(int i) {this.i = i;}
 
-        Command(int command, String message) {
+            public boolean shouldShow() {
+                switch (this) {
+                    case AfterLogin: return isLogin();
+                    case BeforeLogin: return !isLogin();
+                    case Debug: return true; // put false if you want.
+                }
+                return false;
+            }
+        }
+
+        Command(int command, String stringCommand, String message, Type type) {
             this.command = command;
+            this.stringCommand = stringCommand;
             this.message = message;
+            this.type = type;
         }
 
         public static void showMenu() {
             for (Command command: Command.values()) {
-                if (command.command != 9)
+                if (command.type.shouldShow())
                     System.out.println(command);
             }
         }
 
-        public static Command getCommand(int requestCommand) {
+        public static Command getCommand(Object requestCommand) {
             for (Command command: Command.values()) {
-                if (command.command == requestCommand) {
+                boolean machCommand = requestCommand instanceof Integer
+                        ? command.command == (Integer) requestCommand
+                        : command.stringCommand.equalsIgnoreCase((String)requestCommand);
+                if (machCommand && command.type.shouldShow()) {
                     return command;
                 }
             }
@@ -107,12 +166,34 @@ public class Chapter5_3 implements ChapterBase {
 
         public void execute() {
             switch(this) {
+                case Logout: logout(); break;
+                case Login: login(); break;
                 case Create: createAccount(); break;
                 case ShowBalance: showBalance(); break;
                 case Purchase: purchase(); break;
                 case RaiseLimit: raiseLimit(); break;
+                case ChangeScore: changeScore(); break;
                 case ThrouMonth: throughMonth(); break;
                 case Dump: dump(); break;
+            }
+        }
+
+        private void login() {
+            System.out.println("YOUR ACCOUNT NUMBER > ");
+
+            int accountNumber = 0;
+            Scanner scan = new Scanner(System.in);
+            try {
+                accountNumber = scan.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("FAILED...");
+                return;
+            }
+
+            // looks strange, but this method name is also 'login',
+            // Then we have to put more specifically like this. [ClassName].[MethodName]
+            if (!Chapter5_3.login(accountNumber)) {
+                System.out.println("FAILED...");
             }
         }
 
@@ -128,20 +209,22 @@ public class Chapter5_3 implements ChapterBase {
 
                 System.out.println("Has generated your credit card!");
                 System.out.println("Your bank account is here. Don't forget! -> " + newAccount.getAccountNumber());
+                System.out.println("And now, I've login your account.");
+                mLoginHolder = newAccount;
             } else {
                 System.out.println("ANY PROBLEM HAS OCCURRED. Try again from input command, sorry.");
             }
         }
 
         private void showBalance() {
-            CreditCard card = getHolder();
+            CreditCard card = mLoginHolder;
             if (card == null) return;
 
             System.out.println("Your balance is -> " + String.format("%1$.2f", card.getBalance()));
         }
 
         private void purchase() {
-            CreditCard card = getHolder();
+            CreditCard card = mLoginHolder;
             if (card == null) return;
 
             System.out.print("Put your purchase price here -> ");
@@ -157,7 +240,7 @@ public class Chapter5_3 implements ChapterBase {
         }
 
         private void raiseLimit() {
-            CreditCard card = getHolder();
+            CreditCard card = mLoginHolder;
             if (card == null) return;
 
             System.out.print("Put limit price you want here -> ");
@@ -170,6 +253,19 @@ public class Chapter5_3 implements ChapterBase {
             }
 
             System.out.println("FAILED.");
+        }
+
+        private void changeScore() {
+            CreditCard card = mLoginHolder;
+            if (card == null) return;
+
+            System.out.print("Put limit price you want here -> ");
+            try {
+                Scanner scan = new Scanner(System.in);
+                card.changeScore(scan.nextInt());
+            } catch (InputMismatchException e) {
+                System.out.println("FAILED.");
+            }
         }
 
         private void throughMonth() {
@@ -193,9 +289,8 @@ public class Chapter5_3 implements ChapterBase {
 
                     double lastBalance = holder.getBalance();
                     holder.makePayment(payment);
-                    if (holder.getBalance() != 0.00d) {
+                    if (holder.getBalance() > 0.00d) {
                         holder.raiseRate(2.0);
-                    } else {
                         holder.calculateBalance();
                     }
 
