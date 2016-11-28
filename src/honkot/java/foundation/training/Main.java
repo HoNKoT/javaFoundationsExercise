@@ -70,7 +70,12 @@ public class Main {
 
             // check format
             String userInput = scan.next();
-            if (userInput.contains("-")) {
+            if (userInput.equalsIgnoreCase("c") || userInput.equalsIgnoreCase("curret")
+                    || userInput.equalsIgnoreCase("l") || userInput.equalsIgnoreCase("latest")) {
+                Chapter latest = CHAPTER[CHAPTER.length - 1];
+                major = latest.major;
+                minor = latest.minor;
+            } else if (userInput.contains("-")) {
                 String[] values = userInput.split("-");
 
                 try {
