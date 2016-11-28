@@ -20,6 +20,7 @@ public class Main {
             new Chapter(new Chapter5_2(), "Generate some students and print them."),
             new Chapter(new Chapter5_3(), "Credit card."),
             new Chapter(new Chapter5_4(), "[Midterm] register student info"),
+            new Chapter(new Chapter6_1(), "How frame works", true),
     };
 
     public static void main(String[] args) {
@@ -41,9 +42,12 @@ public class Main {
                         callCounter++;
 
                         // Check infinity loop
-                        if (System.currentTimeMillis() - beforeSystemClock
-                                < LOOP_STOP_ALTERNATE_TIME)
+                        if (chapter.frameProject ||
+                                System.currentTimeMillis() - beforeSystemClock
+                                    < LOOP_STOP_ALTERNATE_TIME) {
                             loopStopper = true;
+                            break;
+                        }
                     }
                 }
 
@@ -142,11 +146,15 @@ public class Main {
         int major, minor;
         String description;
         Object chapterClass;
+        boolean frameProject;
         public Chapter(Object chapter) {
-            this(chapter, "");
+            this(chapter, "", false);
+        }
+        public Chapter(Object chapter, String desc) {
+            this(chapter, desc, false);
         }
 
-        public Chapter(Object chapter, String desc) {
+        public Chapter(Object chapter, String desc, boolean frameProject) {
             // Extract major and minor number
             String[] numbers =
                     chapter.getClass().getSimpleName()    // get class name
@@ -156,6 +164,7 @@ public class Main {
             this.minor = Integer.parseInt(numbers[1]);
             this.chapterClass = chapter;
             this.description = desc;
+            this.frameProject = frameProject;
         }
 
         /**
