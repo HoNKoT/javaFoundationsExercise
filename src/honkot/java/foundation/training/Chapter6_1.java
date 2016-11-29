@@ -15,15 +15,12 @@ public class Chapter6_1 implements ChapterBase, ActionListener {
     JFrame mFrame = new JFrame("title");
     JPanel mPanel = new JPanel();
 
-    int mCounter1;
-    int mCounter2;
-
     JButton btn1 = new JButton("<");
     JButton btn2 = new JButton(">");
     JButton btn3 = new JButton("<");
     JButton btn4 = new JButton(">");
-    JLabel label1 = new JLabel();
-    JLabel label2 = new JLabel();
+    JTextField textField1 = new JTextField("0");
+    JTextField textField2 = new JTextField("0");
 
     @Override
     public void main() {
@@ -33,40 +30,35 @@ public class Chapter6_1 implements ChapterBase, ActionListener {
         btn4.addActionListener(this);
 
         mPanel.add(btn1);
-        mPanel.add(label1);
+        mPanel.add(textField1);
         mPanel.add(btn2);
         mPanel.add(btn3);
-        mPanel.add(label2);
+        mPanel.add(textField2);
         mPanel.add(btn4);
 
-        mPanel.setPreferredSize(new Dimension(200, 100));
+        mPanel.setPreferredSize(new Dimension(400, 100));
         mPanel.setBackground(Color.CYAN);
 
         mFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mFrame.getContentPane().add(mPanel);
         mFrame.pack();
         mFrame.setVisible(true);
-
-        updateLabels();
-    }
-
-    private void updateLabels() {
-        label1.setText(Integer.toString(mCounter1));
-        label2.setText(Integer.toString(mCounter2));
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(btn1)) {
-            mCounter1--;
+            int count = Integer.parseInt(textField1.getText());
+            textField1.setText(Integer.toString(--count));
         } else if (e.getSource().equals(btn2)) {
-            mCounter1++;
+            int count = Integer.parseInt(textField1.getText());
+            textField1.setText(Integer.toString(++count));
         } else if (e.getSource().equals(btn3)) {
-            mCounter2--;
+            int count = Integer.parseInt(textField2.getText());
+            textField2.setText(Integer.toString(--count));
         } else if (e.getSource().equals(btn4)) {
-            mCounter2++;
+            int count = Integer.parseInt(textField2.getText());
+            textField2.setText(Integer.toString(++count));
         }
-
-        updateLabels();
     }
 }
