@@ -21,6 +21,8 @@ public class Main {
             new Chapter(new Chapter5_3(), "Credit card."),
             new Chapter(new Chapter5_4(), "[Midterm] register student info"),
             new Chapter(new Chapter6_1(), "How works JButton and JLabel", true),
+            new Chapter(new Chapter6_2(), "How works Dialog", true),
+            new Chapter(new Chapter6_3(), "How changes Font", true),
     };
 
     public static void main(String[] args) {
