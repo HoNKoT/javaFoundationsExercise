@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class Main {
 
     private static final long LOOP_STOP_ALTERNATE_TIME = 200;
+    public static final boolean DEBUG = true;
 
     private static final Chapter[] CHAPTER = {
             new Chapter(new Chapter3_2(), "Play String"),
@@ -23,6 +24,7 @@ public class Main {
             new Chapter(new Chapter6_1(), "How works JButton and JLabel", true),
             new Chapter(new Chapter6_2(), "How works Dialog", true),
             new Chapter(new Chapter6_3(), "How changes Font", true),
+            new Chapter(new Chapter6_4(), "Simple Calculator", true),
     };
 
     public static void main(String[] args) {
