@@ -21,3 +21,7 @@ under construction!
 | /src/honkot/.../Chapter5_2.java      |          | How makes classes and initialize them. |
 | /src/honkot/.../Chapter5_3.java<br> /src/honkot/.../sub/CreditCard.java      |          | Make credit card and give some funcs such as show balance, purchase and payment. |
 | /src/honkot/.../Chapter5_4.java      |          | [For Midterm!] Make student class, fill and remove them. |
+| /src/honkot/.../Chapter6_1.java      |          | How works JButton and JLabel. |
+| /src/honkot/.../Chapter6_2.java      |          | How works Dialog. |
+| /src/honkot/.../Chapter6_3.java      |          | How changes Font. |
+| /src/honkot/.../Chapter6_4.java      |          | Simple Calculator. |
