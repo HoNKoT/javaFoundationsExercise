@@ -24,4 +24,4 @@ under construction!
 | /src/honkot/.../Chapter6_1.java      |          | How works JButton and JLabel. |
 | /src/honkot/.../Chapter6_2.java      |          | How works Dialog. |
 | /src/honkot/.../Chapter6_3.java      |          | How changes Font. |
-| /src/honkot/.../Chapter6_4.java      |          | Simple Calculator. |
+| /src/honkot/.../Chapter6_4.java<br> /src/honkot/.../calculator/ViewController.java <br> /src/honkot/.../calculator/MainService.java      |          | Simple Calculator. |
