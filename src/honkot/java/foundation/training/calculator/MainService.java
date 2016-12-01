@@ -15,10 +15,13 @@ public class MainService {
     private double flashNumber = DEFAULT;
     private double inputNumber = DEFAULT;
     private UserInput mCurrentOrder = null;
-    private Status mStatus = Status.READY;
 
-    private enum Status {
-        READY, PRECALCULATE, INPUTNUMER;
+    /**
+     * This is for starting from GUI directly.
+     * @param args
+     */
+    public static void main(String[] args) {
+        start();
     }
 
     private MainService() {
@@ -204,7 +207,6 @@ public class MainService {
                 ", flashNumber=" + flashNumber +
                 ", inputNumber=" + inputNumber +
                 ", mCurrentOrder=" + mCurrentOrder +
-                ", mStatus=" + mStatus +
                 ", mListener=" + mListener +
                 ", mViews=" + mViews +
                 '}';

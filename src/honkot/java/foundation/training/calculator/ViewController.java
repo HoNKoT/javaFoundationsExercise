@@ -3,6 +3,9 @@ package honkot.java.foundation.training.calculator;
 import honkot.java.foundation.training.Main;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,9 +13,7 @@ import java.awt.event.ActionListener;
 /**
  * Created by hiroki on 2016-11-30.
  */
-public class ViewController extends Panel implements ActionListener {
-    JPanel numberLayout = new JPanel();
-    JPanel controlLayout = new JPanel();
+public class ViewController extends JPanel implements ActionListener {
     JLabel mResult = new JLabel();
 
     MainService.OnUserInputListener mListener;
@@ -24,11 +25,18 @@ public class ViewController extends Panel implements ActionListener {
     private static final String MINUS = "-";
     private static final String MULTIPLY = "*";
     private static final String DIVIDE = "/";
+    private static final String DOT = ".";
+    private static final String SWITCH = "+/-";
+    private static final String PERCENTAGE = "%";
 
-    private static final String[] CONTROL_ARRAY = {
-            PLUS, MINUS, MULTIPLY, DIVIDE
+
+    private static final String[] BUTTON_LAYOUT = {
+            CLEAR,      SWITCH,     PERCENTAGE, DIVIDE,
+            "7",        "8",        "9",        MULTIPLY,
+            "4",        "5",        "6",        MINUS,
+            "1",        "2",        "3",        PLUS,
+            DOT,        "0",        DOT,        EQUAL,
     };
-
 
     public ViewController(MainService.OnUserInputListener listener) {
         mListener = listener;
@@ -37,44 +45,34 @@ public class ViewController extends Panel implements ActionListener {
 
     private void initLayout() {
         // Step1. set display view
+        Border border = mResult.getBorder();
+        Border margin = new EmptyBorder(20, 10, 10, 10);
+        mResult.setBorder(new CompoundBorder(border, margin));
         setLayout(new BorderLayout());
+        mResult.setHorizontalAlignment(JLabel.RIGHT);
         add(mResult, BorderLayout.NORTH);
         display(0);
 
-        // Step2. set numbers view
-        numberLayout.setLayout(new GridLayout(4, 3));
-        for (int i = 1; i <= 9; i++) {
-            // add number 1 - 9
-            JButton buttonX = new JButton(Integer.toString(i));
-            buttonX.addActionListener(this);
-            numberLayout.add(buttonX);
+        // Step2. control views
+        JPanel controlPanel = new JPanel();
+        controlPanel.setLayout(new GridLayout(5, 4));
+        for (String buttonString : BUTTON_LAYOUT) {
+            JButton button = new JButton(buttonString);
+            button.addActionListener(this);
+            controlPanel.add(button);
         }
-        // add number Clear, 0, .
-        JButton buttonC = new JButton(CLEAR);
-        buttonC.addActionListener(this);
-        numberLayout.add(buttonC);
-        JButton button0 = new JButton(Integer.toString(0));
-        button0.addActionListener(this);
-        numberLayout.add(button0);
-        JButton buttonD = new JButton(EQUAL);
-        buttonD.addActionListener(this);
-        numberLayout.add(buttonD);
-        add(numberLayout, BorderLayout.WEST);
-
-
-        // Step3. set controller
-        controlLayout.setLayout(new GridLayout(4, 1));
-        for (String print : CONTROL_ARRAY) {
-            JButton control = new JButton(print);
-            control.addActionListener(this);
-            controlLayout.add(control);
-        }
-        add(controlLayout, BorderLayout.EAST);
-
+        add(controlPanel, BorderLayout.CENTER);
     }
 
     public void display(double number) {
+        boolean numberOfDecimalPlaces = number % 1 < 0d;
+        if (numberOfDecimalPlaces) {
+            //TODO
+        } else {
+            //TODO
+        }
         mResult.setText(Double.toString(number));
+        mResult.setFont(new Font("Helvetica", Font.BOLD, 24));
     }
 
     @Override
