@@ -65,12 +65,6 @@ public class ViewController extends JPanel implements ActionListener {
     }
 
     public void display(double number) {
-        boolean numberOfDecimalPlaces = number % 1 < 0d;
-        if (numberOfDecimalPlaces) {
-            //TODO
-        } else {
-            //TODO
-        }
         mResult.setText(Double.toString(number));
         mResult.setFont(new Font("Helvetica", Font.BOLD, 24));
     }
@@ -81,6 +75,7 @@ public class ViewController extends JPanel implements ActionListener {
         String printed = button.getText();
         if (Main.DEBUG) System.out.println("### press the button " + printed);
 
+        // for number callback
         try {
             int number = Integer.parseInt(printed);
             mListener.onUserInput(MainService.UserInput.byNumber(number));
@@ -89,18 +84,21 @@ public class ViewController extends JPanel implements ActionListener {
             // nothing to do
         }
 
-        if (printed.equals(PLUS)) {
-            mListener.onUserInput(MainService.UserInput.Addition);
-        } else if (printed.equals(MINUS)) {
-            mListener.onUserInput(MainService.UserInput.Subtraction);
-        } else if (printed.equals(MULTIPLY)) {
-            mListener.onUserInput(MainService.UserInput.Multiplication);
-        } else if (printed.equals(DIVIDE)) {
-            mListener.onUserInput(MainService.UserInput.Division);
-        } else if (printed.equals(CLEAR)) {
-            mListener.onUserInput(MainService.UserInput.Clear);
-        } else if (printed.equals(EQUAL)) {
-            mListener.onUserInput(MainService.UserInput.Equal);
+        // for calculate callback
+        MainService.UserInput callback = null;
+        switch (printed) {
+            case PLUS: callback = MainService.UserInput.Addition; break;
+            case MINUS: callback = MainService.UserInput.Subtraction; break;
+            case MULTIPLY: callback = MainService.UserInput.Multiplication; break;
+            case DIVIDE: callback = MainService.UserInput.Division; break;
+            case CLEAR: callback = MainService.UserInput.Clear; break;
+            case EQUAL: callback = MainService.UserInput.Equal; break;
+            case SWITCH: callback = MainService.UserInput.Switch; break;
+            case PERCENTAGE: callback = MainService.UserInput.Percentage; break;
+            case DOT: callback = MainService.UserInput.Dot; break;
+        }
+        if (callback != null) {
+            mListener.onUserInput(callback);
         }
     }
 }

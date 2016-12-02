@@ -11,10 +11,12 @@ public class MainService {
     ViewController mViews;
     private static MainService mService;
 
-    private final static double DEFAULT = 0.0d;
+    private final static double DEFAULT = 0d;
     private double flashNumber = DEFAULT;
     private double inputNumber = DEFAULT;
     private UserInput mCurrentOrder = null;
+    private final static int ZERO = 0;
+    private int dotInputMode = ZERO;
 
     /**
      * This is for starting from GUI directly.
@@ -74,7 +76,9 @@ public class MainService {
         Division,
         Dot,
         Clear,
-        Equal;
+        Equal,
+        Switch,
+        Percentage;
 
         private int number = -1;
 
@@ -143,7 +147,15 @@ public class MainService {
                 funcCalculate();
                 mCurrentOrder = input;
                 break;
-
+            case Dot:
+                startDotInputMpde();
+                break;
+            case Switch:
+                funcSwitch();
+                break;
+            case Percentage:
+                funcPercentage();
+                break;
         }
         display();
     }
@@ -154,8 +166,35 @@ public class MainService {
                 && flashNumber != DEFAULT;
     }
 
+    private boolean isDotInputMode() {
+        return dotInputMode > ZERO;
+    }
+
+    private void startDotInputMpde() {
+        if (!isDotInputMode()) {
+            dotInputMode = 1;
+        }
+    }
+
+    private void stopDotInputMpde() {
+        dotInputMode = ZERO;
+    }
+
     private void funcNumber(int number) {
-        inputNumber = inputNumber * 10 + number;
+        if (isDotInputMode()) {
+            int temp = 1;
+            for (int i = 0; i < dotInputMode; i++) {
+                temp *= 10;
+            }
+            inputNumber += (double)number / temp;
+            dotInputMode++;
+        } else {
+            if (inputNumber >= 0) {
+                inputNumber = inputNumber * 10 + number;
+            } else {
+                inputNumber = inputNumber * 10 - number;
+            }
+        }
     }
 
     /**
@@ -191,13 +230,30 @@ public class MainService {
 
         // reset inputNumber
         inputNumber = DEFAULT;
+        stopDotInputMpde();
     }
 
     private void funcClear() {
         flashNumber = DEFAULT;
         inputNumber = DEFAULT;
         mCurrentOrder = null;
+        stopDotInputMpde();
     }
+
+    private void funcSwitch() {
+        inputNumber *= -1;
+    }
+
+    private void funcPercentage() {
+        if (inputNumber != DEFAULT) {
+            flashNumber = inputNumber;
+        }
+        inputNumber = DEFAULT;
+        mCurrentOrder = null;
+
+        flashNumber /= 100;
+    }
+
     // region execute end --------------------------------------
 
 
@@ -207,8 +263,8 @@ public class MainService {
                 ", flashNumber=" + flashNumber +
                 ", inputNumber=" + inputNumber +
                 ", mCurrentOrder=" + mCurrentOrder +
+                ", dotInputMode=" + dotInputMode +
                 ", mListener=" + mListener +
-                ", mViews=" + mViews +
                 '}';
     }
 }
