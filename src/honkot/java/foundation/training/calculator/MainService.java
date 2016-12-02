@@ -44,6 +44,7 @@ public class MainService {
 
     private void display() {
         if (Main.DEBUG) System.out.println(this);
+
         if (inputNumber == DEFAULT && mCurrentOrder == null) {
             // Case 1: ready.
             mViews.display(flashNumber);
@@ -57,6 +58,21 @@ public class MainService {
             // Case 4: in calculate progress. (User input numbers after case 3)
             mViews.display(inputNumber);
         }
+
+        //TODO ADJUST SHOW HISTORY LOGIC
+        String historyString = "";
+        if (flashNumber != DEFAULT && mCurrentOrder != null) {
+            historyString += Double.toString(flashNumber);
+            if (mCurrentOrder != null) {
+                switch (mCurrentOrder) {
+                    case Addition: historyString += " + "; break;
+                    case Subtraction: historyString += " - "; break;
+                    case Multiplication: historyString += " * "; break;
+                    case Division: historyString += " / "; break;
+                }
+            }
+        }
+        mViews.putHistory(historyString);
     }
 
     protected enum UserInput {
@@ -182,7 +198,12 @@ public class MainService {
 
     private void funcNumber(int number) {
         if (isDotInputMode()) {
-            int temp = 1;
+            /*
+             * You know calculate between doubles is not exact sometimes,
+             * although it is just division 10 again and again.
+             * TODO: So I try to parse String first, and just append the Number as String.
+             */
+            double temp = 1;
             for (int i = 0; i < dotInputMode; i++) {
                 temp *= 10;
             }
@@ -211,12 +232,12 @@ public class MainService {
                     flashNumber -= inputNumber;
                     break;
                 case Multiplication:
-                    if (inputNumber != DEFAULT) {
-                        flashNumber *= inputNumber;
-                    }
+                    flashNumber *= inputNumber;
                     break;
                 case Division:
-                    flashNumber /= inputNumber;
+                    if (inputNumber != DEFAULT) {
+                        flashNumber /= inputNumber;
+                    }
                     break;
             }
         } else {

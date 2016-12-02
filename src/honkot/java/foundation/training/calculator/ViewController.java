@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
  * Created by hiroki on 2016-11-30.
  */
 public class ViewController extends JPanel implements ActionListener {
+    JLabel mHistory = new JLabel();
     JLabel mResult = new JLabel();
 
     MainService.OnUserInputListener mListener;
@@ -45,13 +46,28 @@ public class ViewController extends JPanel implements ActionListener {
 
     private void initLayout() {
         // Step1. set display view
+        JPanel displayPanel = new JPanel();
+        displayPanel.setLayout(new BorderLayout());
+
         Border border = mResult.getBorder();
-        Border margin = new EmptyBorder(20, 10, 10, 10);
+        Border margin = new EmptyBorder(10, 10, 10, 10);
         mResult.setBorder(new CompoundBorder(border, margin));
         setLayout(new BorderLayout());
         mResult.setHorizontalAlignment(JLabel.RIGHT);
-        add(mResult, BorderLayout.NORTH);
+        mResult.setFont(new Font("Helvetica", Font.BOLD, 24));
+        displayPanel.add(mResult, BorderLayout.CENTER);
         display(0);
+
+        Border border2 = mHistory.getBorder();
+        Border margin2 = new EmptyBorder(10, 10, 0, 10);
+        mHistory.setBorder(new CompoundBorder(border2, margin2));
+        setLayout(new BorderLayout());
+        mHistory.setHorizontalAlignment(JLabel.RIGHT);
+        mHistory.setFont(new Font("Helvetica", Font.PLAIN, 12));
+        displayPanel.add(mHistory, BorderLayout.NORTH);
+        putHistory("Welcome to Simple Calculator!");
+
+        add(displayPanel, BorderLayout.NORTH);
 
         // Step2. control views
         JPanel controlPanel = new JPanel();
@@ -66,7 +82,14 @@ public class ViewController extends JPanel implements ActionListener {
 
     public void display(double number) {
         mResult.setText(Double.toString(number));
-        mResult.setFont(new Font("Helvetica", Font.BOLD, 24));
+    }
+
+    public void putHistory(String putString) {
+        mHistory.setText(putString);
+    }
+
+    public void resetHistory() {
+        mHistory.setText("");
     }
 
     @Override
