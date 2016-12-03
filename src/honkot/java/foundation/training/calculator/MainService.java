@@ -2,6 +2,10 @@ package honkot.java.foundation.training.calculator;
 
 import honkot.java.foundation.training.Main;
 import javax.swing.*;
+import java.util.ArrayList;
+
+import static honkot.java.foundation.training.calculator.MainService.UserInput.Equal;
+import static honkot.java.foundation.training.calculator.MainService.UserInput.Multiplication;
 
 /**
  * Created by hiroki on 2016-11-30.
@@ -12,11 +16,152 @@ public class MainService {
     private static MainService mService;
 
     private final static double DEFAULT = 0d;
-    private double flashNumber = DEFAULT;
     private double inputNumber = DEFAULT;
-    private UserInput mCurrentOrder = null;
     private final static int ZERO = 0;
     private int dotInputMode = ZERO;
+
+    private UserInput mLastInput;
+    private UserInput mCurrentInput;
+
+    private static class HistoryController {
+        private static ArrayList<History> histories = new ArrayList<>();
+
+        public static boolean isEmpty() { return histories.size() == 0;}
+        public static void add(double number) {
+            int lastIndex = histories.size() - 1;
+            if (!isEmpty() && isNumberLast()) {
+                histories.remove(lastIndex);
+            }
+            histories.add(new History(number));
+        }
+        public static void add(UserInput command) {
+            int lastIndex = histories.size() - 1;
+            if (!isEmpty() && isCommandLast()) {
+                histories.remove(lastIndex);
+            }
+            histories.add(new History(command));
+        }
+        public static boolean isCommandLast() {
+            return !histories.get(histories.size() - 1).isNumber();
+        }
+        public static boolean isNumberLast() {
+            return histories.get(histories.size() - 1).isNumber();
+        }
+        public static void clear() {
+            histories = new ArrayList<>();
+        }
+        public static boolean isEqualLast() {
+            return !isEmpty() && histories.get(histories.size() - 1).command.equals(Equal);
+        }
+        public static String getHistoryString() {
+            StringBuffer buf = new StringBuffer();
+
+            for (History history : histories) {
+                if (history.isNumber()) {
+                    buf.append(history.number);
+                } else {
+                    switch (history.command) {
+                        case Addition: buf.append(" + "); break;
+                        case Subtraction: buf.append(" - "); break;
+                        case Multiplication: buf.append(" * "); break;
+                        case Division: buf.append(" / "); break;
+                        case Equal: buf.append(" = "); break;
+                    }
+                }
+            }
+            return buf.toString();
+        }
+
+        public static double calculate() {
+            double ret = DEFAULT;
+
+            ArrayList<History> tempHistries = copy();
+
+            // At first, calculate * and /
+            for (int i = 0; i < tempHistries.size(); i++) {
+                History history = tempHistries.get(i);
+
+                if (history.isNumber()) {
+                    int thisIndex = tempHistries.indexOf(history);
+
+                    if (tempHistries.size() >= thisIndex + 3) {
+                        // has next (command) and next (number)
+                        UserInput command = tempHistries.get(thisIndex + 1).command;
+                        double number = tempHistries.get(thisIndex + 2).number;
+
+                        // calculate and remove them
+                        switch (command) {
+                            case Multiplication:
+                                history.number *= number;
+                                break;
+                            case Division:
+                                if (history.number != DEFAULT) {
+                                    ret /= history.number;
+                                }
+                                break;
+                            default:
+                                continue;
+                        }
+                        tempHistries.remove(thisIndex + 2);
+                        tempHistries.remove(thisIndex + 1);
+                    }
+                }
+            }
+
+            // finally, calculate + and -
+            for (History history : tempHistries) {
+                if (history.isNumber()) {
+                    // number input
+                    if (tempHistries.indexOf(history) == 0) {
+                        // initialize as first number
+                        ret = history.number;
+
+                    } else {
+                        // get command for calculation and boss.
+                        UserInput command =
+                                tempHistries.get(tempHistries.indexOf(history) - 1).command;
+
+                        switch (command) {
+                            case Addition:
+                                ret += history.number;
+                                break;
+                            case Subtraction:
+                                ret -= history.number;
+                                break;
+                        }
+                    }
+
+                }
+            }
+
+            return ret;
+        }
+
+        private static ArrayList<History> copy() {
+            ArrayList<History> ret = new ArrayList<>();
+            for (History history : histories) {
+                ret.add(history.copy());
+            }
+            return ret;
+        }
+
+        private static class History {
+            double number = DEFAULT;
+            UserInput command;
+
+            History(double number) { this.number = number;}
+            History(UserInput command) { this.command = command;}
+            public boolean isNumber() { return number != DEFAULT;}
+
+            public History copy() {
+                if (isNumber()) {
+                    return new History(number);
+                } else {
+                    return new History(command);
+                }
+            }
+        }
+    }
 
     /**
      * This is for starting from GUI directly.
@@ -45,34 +190,16 @@ public class MainService {
     private void display() {
         if (Main.DEBUG) System.out.println(this);
 
-        if (inputNumber == DEFAULT && mCurrentOrder == null) {
-            // Case 1: ready.
-            mViews.display(flashNumber);
-        } else if (inputNumber != DEFAULT && mCurrentOrder == null) {
-            // Case 2: error state
+        if (!HistoryController.isEqualLast()) {
             mViews.display(inputNumber);
-        } else if (inputNumber == DEFAULT && mCurrentOrder != null) {
-            // Case 3: User input just how user gonna calculate
-            mViews.display(flashNumber);
-        } else if (inputNumber != DEFAULT && mCurrentOrder != null) {
-            // Case 4: in calculate progress. (User input numbers after case 3)
-            mViews.display(inputNumber);
-        }
-
-        //TODO ADJUST SHOW HISTORY LOGIC
-        String historyString = "";
-        if (flashNumber != DEFAULT && mCurrentOrder != null) {
-            historyString += Double.toString(flashNumber);
-            if (mCurrentOrder != null) {
-                switch (mCurrentOrder) {
-                    case Addition: historyString += " + "; break;
-                    case Subtraction: historyString += " - "; break;
-                    case Multiplication: historyString += " * "; break;
-                    case Division: historyString += " / "; break;
-                }
+        } else {
+            if (HistoryController.isEqualLast()) {
+                mViews.display(HistoryController.calculate());
+            } else {
+                mViews.display(inputNumber);
             }
         }
-        mViews.putHistory(historyString);
+        mViews.putHistory(HistoryController.getHistoryString());
     }
 
     protected enum UserInput {
@@ -132,7 +259,11 @@ public class MainService {
     // region execute start --------------------------------------
 
     private void execute(UserInput input) {
+        mLastInput = mCurrentInput;
+        mCurrentInput = input;
+
         switch (input) {
+            // numbers
             case Btn1:
             case Btn2:
             case Btn3:
@@ -143,43 +274,52 @@ public class MainService {
             case Btn8:
             case Btn9:
             case Btn0:
-                if (afterEquals()) {
-                    // Here is after Equals. so reset first!
-                    funcClear();
+                if (HistoryController.isEqualLast()) {
+                    // after equal, clear first!
+                    HistoryController.clear();
                 }
                 funcNumber(input.number);
                 break;
+
+            // commands for calculatio
+            case Multiplication:
+                if (inputNumber == DEFAULT) {
+                    // ignore error case
+                    break;
+                }
             case Equal:
-                funcCalculate();
-                mCurrentOrder = null;
+            case Addition:
+            case Subtraction:
+            case Division:
+                if (!HistoryController.isEqualLast()) {
+                    HistoryController.add(inputNumber);
+                    HistoryController.add(input);
+                    inputNumber = DEFAULT;
+                    stopDotInputMpde();
+                }
                 break;
+
+            // action immediately
             case Clear:
                 funcClear();
                 break;
-            case Addition:
-            case Subtraction:
-            case Multiplication:
-            case Division:
-                funcCalculate();
-                mCurrentOrder = input;
-                break;
             case Dot:
-                startDotInputMpde();
+                if (!HistoryController.isEqualLast()) {
+                    startDotInputMpde();
+                }
                 break;
             case Switch:
-                funcSwitch();
+                if (!HistoryController.isEqualLast()) {
+                    funcSwitch();
+                }
                 break;
             case Percentage:
-                funcPercentage();
+                if (!HistoryController.isEqualLast()) {
+                    funcPercentage();
+                }
                 break;
         }
         display();
-    }
-
-    private boolean afterEquals() {
-        return mCurrentOrder == null
-                && inputNumber == DEFAULT
-                && flashNumber != DEFAULT;
     }
 
     private boolean isDotInputMode() {
@@ -218,47 +358,10 @@ public class MainService {
         }
     }
 
-    /**
-     * calculate depending on the order user inputted.
-     */
-    private void funcCalculate() {
-        if (mCurrentOrder != null) {
-
-            switch (mCurrentOrder) {
-                case Addition:
-                    flashNumber += inputNumber;
-                    break;
-                case Subtraction:
-                    flashNumber -= inputNumber;
-                    break;
-                case Multiplication:
-                    flashNumber *= inputNumber;
-                    break;
-                case Division:
-                    if (inputNumber != DEFAULT) {
-                        flashNumber /= inputNumber;
-                    }
-                    break;
-            }
-        } else {
-            if (afterEquals()) {
-                // nothing to do here
-            } else {
-                // Here is after clear.
-                flashNumber = inputNumber;
-            }
-        }
-
-        // reset inputNumber
-        inputNumber = DEFAULT;
-        stopDotInputMpde();
-    }
-
     private void funcClear() {
-        flashNumber = DEFAULT;
         inputNumber = DEFAULT;
-        mCurrentOrder = null;
         stopDotInputMpde();
+        HistoryController.clear();
     }
 
     private void funcSwitch() {
@@ -266,13 +369,8 @@ public class MainService {
     }
 
     private void funcPercentage() {
-        if (inputNumber != DEFAULT) {
-            flashNumber = inputNumber;
-        }
-        inputNumber = DEFAULT;
-        mCurrentOrder = null;
-
-        flashNumber /= 100;
+        HistoryController.clear();
+        inputNumber /= 100.0d;
     }
 
     // region execute end --------------------------------------
@@ -281,10 +379,10 @@ public class MainService {
     @Override
     public String toString() {
         return "MainService{" +
-                ", flashNumber=" + flashNumber +
-                ", inputNumber=" + inputNumber +
-                ", mCurrentOrder=" + mCurrentOrder +
+                " inputNumber=" + inputNumber +
                 ", dotInputMode=" + dotInputMode +
+                ", mLastInput=" + mLastInput +
+                ", mCurrentInput=" + mCurrentInput +
                 ", mListener=" + mListener +
                 '}';
     }
