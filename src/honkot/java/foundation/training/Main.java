@@ -25,6 +25,7 @@ public class Main {
             new Chapter(new Chapter6_2(), "How works Dialog", true),
             new Chapter(new Chapter6_3(), "How changes Font", true),
             new Chapter(new Chapter6_4(), "Simple Calculator", true),
+            new Chapter(new Chapter8_1(), "Bank account (v2)"),
     };
 
     public static void main(String[] args) {
