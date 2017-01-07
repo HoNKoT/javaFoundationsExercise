@@ -25,3 +25,6 @@ under construction!
 | /src/honkot/.../Chapter6_2.java      |          | How works Dialog. |
 | /src/honkot/.../Chapter6_3.java      |          | How changes Font. |
 | /src/honkot/.../Chapter6_4.java<br> /src/honkot/.../calculator/ViewController.java <br> /src/honkot/.../calculator/MainService.java      |          | Simple Calculator. |
+| /src/honkot/.../Chapter8_1.java      |          | Manage some commands and variables as array. |
+| /src/honkot/.../Chapter10_1.java      |          | Design a system for a dealer that sales. |
+| /src/honkot/.../Chapter10_2.java<br> /src/honkot/.../sub/Employee.java<br> /src/honkot/.../sub/SalaryEmployee.java <br> /src/honkot/.../sub/CommissionEmployee.java       |          | Final Exam (Input Salary and Print them). |
