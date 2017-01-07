@@ -94,7 +94,7 @@ public class Chapter10_2 implements ChapterBase {
     private static void printMenu() {
         StringBuffer buf = new StringBuffer();
         buf.append("Welcome to Employee Salary System, please choose from the following:"); buf.append(LF);
-        buf.append(" 1. Create an employee."); buf.append(System.getProperty("line.separator"));
+        buf.append(" 1. Create an employee."); buf.append(LF);
         buf.append(" 2. Print all employees (names and salaries)."); buf.append(LF);
         buf.append(" 3. Pay all employees for the month and print amount."); buf.append(LF);
         buf.append(" 4. Exit."); buf.append(LF);
